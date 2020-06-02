@@ -14,7 +14,7 @@ Configurations:
 SPLIT = 'test'
 N_HIDDEN = 256
 GPU_ID = 0
-CKPT_FILE = "logs/checkpoint-011.pth"
+CKPT_FILE = "logs/checkpoint-015.pth"
 
 
 def main():

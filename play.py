@@ -19,14 +19,15 @@ Configurations:
 SPLIT = 'test'
 N_HIDDEN = 256
 GPU_ID = 0
-CKPT_FILE = "logs/checkpoint-010.pth"
+CKPT_FILE = "logs/checkpoint-015.pth"
 
 
 def showAttention(image, attentions):
-    plt.figure(figsize=(10,5))
+    plt.figure(figsize=(5,3))
     attentions = attentions[:-1]
     plt.subplot(1, len(attentions)+1, 1)
     plt.imshow(image)
+    plt.axis('off')
     for i, attn in enumerate(attentions):
         attn = np.reshape(attn, [7, 7])
         attn = cv2.resize(attn, (image.shape[1], image.shape[0]))
@@ -65,10 +66,11 @@ def main():
             print (ground_truth)
             print ()
 
-            attentions = torch.stack(attentions, dim=0).cpu().numpy()   # (target_length, source_length)
-            x = t.ToPILImage()(x[0])
-            x = np.array(x)
-            showAttention(x, attentions)
+            if predictions != ground_truth:
+                attentions = torch.stack(attentions, dim=0).cpu().numpy()   # (target_length, source_length)
+                x = t.ToPILImage()(x[0])
+                x = np.array(x)
+                showAttention(x, attentions)
 
 
 if __name__ == '__main__':
