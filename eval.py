@@ -1,8 +1,6 @@
 """ Compute the loss and phoneme error rate (PER).
 """
 import torch
-import data
-import build_model
 import os
 
 
@@ -21,7 +19,8 @@ CKPT_FILE = "logs/checkpoint-020.pth"
 
 def main():
     os.environ["CUDA_VISIBLE_DEVICES"] = str(GPU_ID)
-
+    import data
+    import build_model
     assert torch.cuda.is_available()
 
     # Create dataset

@@ -3,7 +3,6 @@ import torch.nn as nn
 
 
 class VGG(nn.Module):
-
     def __init__(self, features, init_weights=True):
         super(VGG, self).__init__()
         self.features = features
@@ -43,7 +42,8 @@ def make_layers(cfg, batch_norm=False):
             in_channels = v
     return nn.Sequential(*layers)
 
-# [64, 'M', 128, 'M', 256, 256, 'M', 512, 512, 'M', 512, 512, 'M']
-def net(batch_norm, **kwargs):
-    model = VGG(make_layers([64, 128, 'M', 256, 256, 'M', 512, 512, 'M', 512, 512] , batch_norm=batch_norm), **kwargs)
+
+VGG11 = [64, 'M', 128, 'M', 256, 256, 'M', 512, 512, 'M', 512, 512, 'M']
+def net(batch_norm, cfg=VGG11, **kwargs):
+    model = VGG(make_layers(cfg , batch_norm=batch_norm), **kwargs)
     return model

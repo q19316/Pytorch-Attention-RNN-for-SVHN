@@ -19,7 +19,7 @@ Configurations:
 SPLIT = 'test'
 N_HIDDEN = 256
 GPU_ID = 0
-CKPT_FILE = "logs/checkpoint-020.pth"
+CKPT_FILE = "logs/checkpoint-012.pth"
 
 
 def showAttention(image, attentions):
@@ -29,7 +29,7 @@ def showAttention(image, attentions):
     plt.imshow(image)
     for i, attn in enumerate(attentions):
         attn = np.reshape(attn, [4, 8])
-        attn = cv2.resize(attn, (256, 128))
+        attn = cv2.resize(attn, (image.shape[1], image.shape[0]))
         attn = np.expand_dims(attn, axis=-1)
         attn = attn * (1 / np.max(attn))
         plt.subplot(1, len(attentions)+1, i+2)

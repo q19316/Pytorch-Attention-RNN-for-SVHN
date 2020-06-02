@@ -10,17 +10,20 @@ from torch.utils.data import Dataset, DataLoader
 from torchnlp.encoders.text import StaticTokenizerEncoder
 
 
+ROOT = "/data/Data2/Public-Folders/SVHN"
+
+
 def transform(augmentation):
     if augmentation:
         return t.Compose([
             t.ColorJitter(0.5, 0.5, 0.5, 0.5),
-            t.RandomResizedCrop(size=(32, 64), scale=(0.7, 1.0), ratio=(1.5, 4.0)),
+            t.RandomResizedCrop(size=(128, 256), scale=(0.7, 1.0), ratio=(1.5, 4.0)),
             t.ToTensor(),
             ])
     else:
         return t.Compose([
-            t.Resize((40, 70)),
-            t.CenterCrop((32, 64)),
+            t.Resize((160, 280)),
+            t.CenterCrop((128, 256)),
             t.ToTensor(),
             ])
 
@@ -106,7 +109,7 @@ def load_json(split):
     """
     with open('%s.json'%split, 'r') as f:
         data = json.load(f)
-    pairs = [{'path': os.path.join(split, x[0]), 'label': preprocess_target(x[1]['label'])} for x in data]
+    pairs = [{'path': os.path.join(ROOT, split, x[0]), 'label': preprocess_target(x[1]['label'])} for x in data]
     random.seed(4321)
     random.shuffle(pairs)
     return pairs
