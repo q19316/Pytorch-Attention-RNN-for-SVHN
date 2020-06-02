@@ -19,11 +19,11 @@ Configurations:
 BATCH_SIZE = 64
 N_HIDDEN = 256
 INITIAL_LR = 3e-4
-EPOCHS = 20
-LR_MILESTONES = [15]
+EPOCHS = 15
+LR_MILESTONES = [10]
 DROPOUT = 0.
 AUGMENTATION = True
-GPU_ID = 0
+GPU_ID = 1
 SAVE_PATH = "logs/"
 
 
@@ -80,8 +80,8 @@ def main():
 
             if not step%10:
                 print (time.strftime("%H:%M:%S", time.localtime()), end=' ')
-                print ("epoch: %d, step: %d, loss: %.3f" % (epoch, step, loss))
-                log_history(SAVE_PATH, total_steps, loss)
+                print ("epoch: %d, step: %d, loss: %.3f" % (epoch, step, loss.item()))
+                log_history(SAVE_PATH, total_steps, loss.item())
         scheduler.step()
 
         print_lr(optimizer)

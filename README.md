@@ -1,2 +1,2 @@
 # Attention-RNN-for-SVHN
-We recognize SVHN without using bounding boxes
+Test accuracy = 96.3 %

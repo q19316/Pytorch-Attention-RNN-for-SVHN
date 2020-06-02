@@ -1,11 +1,14 @@
 """ Covert the digitStruct.mat to json.
-Based on: https://stackoverflow.com/questions/41176258/h5py-access-data-in-datasets-in-svhn
+Source: https://stackoverflow.com/questions/41176258/h5py-access-data-in-datasets-in-svhn
 """
 import os
 import h5py
 import numpy as np
 import tqdm
 import json
+
+
+ROOT = "/data/Data2/Public-Folders/SVHN"
 
 
 def get_box_data(index, hdf5_data):
@@ -36,17 +39,17 @@ def get_name(index, hdf5_data):
 
 
 def load(split):
-    mat_data = h5py.File(os.path.join(split, 'digitStruct.mat'), 'r')
+    mat_data = h5py.File(os.path.join(ROOT, split, 'digitStruct.mat'), 'r')
     size = mat_data['/digitStruct/name'].size
 
-    pairs = []
+    data = []
     for _i in tqdm.tqdm(range(size)):
-        pic = get_name(_i, mat_data)
+        pic = os.path.join(ROOT, split, get_name(_i, mat_data))
         box = get_box_data(_i, mat_data)
-        pairs.append((pic, box))
+        data.append({'path':pic, 'anno':box})
 
     with open('%s.json'%split, 'w') as f:
-        json.dump(pairs, f)
+        json.dump(data, f)
 
 
 def main():

@@ -14,7 +14,7 @@ Configurations:
 SPLIT = 'test'
 N_HIDDEN = 256
 GPU_ID = 0
-CKPT_FILE = "logs/checkpoint-020.pth"
+CKPT_FILE = "logs/checkpoint-011.pth"
 
 
 def main():
@@ -39,7 +39,7 @@ def main():
     correct = 0
     with torch.no_grad():
         for step, (x, y) in enumerate(loader):
-            total_loss += model(x.cuda(), y.cuda()) * y.shape[1]
+            total_loss += model(x.cuda(), y.cuda()).item() * y.shape[1]
             n_tokens += y.shape[1]
 
             predictions, _ = model(x.cuda(), test=True)

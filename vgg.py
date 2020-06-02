@@ -32,7 +32,7 @@ def make_layers(cfg, batch_norm=False):
     in_channels = 3
     for v in cfg:
         if v == 'M':
-            layers += [nn.MaxPool2d(kernel_size=2, stride=2)]
+            layers += [nn.MaxPool2d(kernel_size=3, stride=2, padding=1)]
         else:
             conv2d = nn.Conv2d(in_channels, v, kernel_size=3, padding=1)
             if batch_norm:
@@ -43,7 +43,7 @@ def make_layers(cfg, batch_norm=False):
     return nn.Sequential(*layers)
 
 
-VGG11 = [64, 'M', 128, 'M', 256, 256, 'M', 512, 512, 'M', 512, 512, 'M']
-def net(batch_norm, cfg=VGG11, **kwargs):
+DEFAULT = [64, 64, 'M', 128, 128, 'M', 256, 256, 'M', 512, 512]
+def net(batch_norm, cfg=DEFAULT, **kwargs):
     model = VGG(make_layers(cfg , batch_norm=batch_norm), **kwargs)
     return model
