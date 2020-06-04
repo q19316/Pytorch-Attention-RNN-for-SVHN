@@ -1,3 +1,5 @@
+""" Define the backbone, which is based on torchvison's VGG net.
+"""
 import torch
 import torch.nn as nn
 
