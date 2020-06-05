@@ -164,7 +164,7 @@ class DecoderRNN(nn.Module):
         Apply attention.
 
         Args:
-            source_states (torch.FloatTensor, [batch_size, ftrsH * ftrsW, ftrsC]): The padded encoder output states.
+            source_states (torch.FloatTensor, [batch_size, ftrsH * ftrsW, ftrsC]): The encoder output states.
             target_state (torch.FloatTensor, [batch_size, hidden_size]): The decoder output state. 
 
         Returns:
