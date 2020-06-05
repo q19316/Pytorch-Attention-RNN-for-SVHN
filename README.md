@@ -81,11 +81,11 @@ python play.py
 ```
 ![](./img/Figure_2.png)
 
-## Reference
-I.Goodfellow _et al._, "Multi-digit Number Recognition from Street View Imagery using Deep Convolutional Neural Networks",
+## References
+[1] I.Goodfellow _et al._, "Multi-digit Number Recognition from Street View Imagery using Deep Convolutional Neural Networks",
 http://arxiv.org/pdf/1312.6082.pdf
 
-K.Xu _et al._, "Show, Attend and Tell: Neural Image Caption Generation with Visual Attention",
+[2] K.Xu _et al._, "Show, Attend and Tell: Neural Image Caption Generation with Visual Attention",
 https://arxiv.org/pdf/1502.03044.pdf
 
 
