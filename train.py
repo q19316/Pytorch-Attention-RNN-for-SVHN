@@ -23,7 +23,7 @@ EPOCHS = 15
 LR_MILESTONES = [10]
 DROPOUT = 0.
 AUGMENTATION = True
-GPU_ID = 1
+GPU_ID = 0
 SAVE_PATH = "logs/"
 
 
@@ -58,7 +58,7 @@ def main():
     loader, tokenizer = data.load(split='train', batch_size=BATCH_SIZE, augmentation=AUGMENTATION)
 
     # Build model
-    model = build_model.Seq2Seq(len(tokenizer.vocab), N_HIDDEN, drop_p=DROPOUT)
+    model = build_model.AttentionRNN(len(tokenizer.vocab), N_HIDDEN, drop_p=DROPOUT)
     model.train()
     model = model.cuda()
 

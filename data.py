@@ -16,7 +16,7 @@ def transform(augmentation):
     if augmentation:
         return t.Compose([
             t.Resize((64, 64)),
-            t.RandomCrop((54, 54)),
+            t.RandomResizedCrop((54, 54), scale=(0.7, 1.0)),
             t.ColorJitter(0.5, 0.5, 0.5, 0.5),
             t.ToTensor(),
             ])
@@ -48,7 +48,7 @@ class SVHN(Dataset):
     def __getitem__(self, idx):
         """
         Returns:
-            image (torch.FloatTensor, [3, 54, 54]): The image after preprocessing.
+            image (torch.FloatTensor, [3, imgH, imgW]): The image after preprocessing.
             label (string): The label sequence.
         """
         image = Image.open(self.data[idx]['path'])
@@ -73,7 +73,7 @@ class SVHN(Dataset):
             tokenizer (Pytorch-NLP’s StaticTokenizerEncoder): A tokenizer to encode/decode label sequences.
 
         Returns:
-            xs (torch.FloatTensor, [batch_size, 3, 54, 54]): Batched images.
+            xs (torch.FloatTensor, [batch_size, 3, imgH, imgW]): Batched images.
             ys (torch.LongTensor, [batch_size, (padded) n_tokens]): Batched label sequences.
         """
         xs, ys = zip(*batch)
@@ -198,9 +198,13 @@ def inspect_data():
         print (tokenizer.decode(ys[i]))
         plt.figure()
         plt.subplot(2,1,1)
+        plt.title('Origianl')
         plt.imshow(xs_raw[i].permute(1,2,0))
+        plt.axis('off')
         plt.subplot(2,1,2)
+        plt.title('Distorted')
         plt.imshow(xs[i].permute(1,2,0))
+        plt.axis('off')
         plt.show()
 
 

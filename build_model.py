@@ -7,6 +7,7 @@ import torch.nn.utils.rnn as rnn_utils
 import numpy as np
 import cnn
 
+
 class MultiLayerGRUCell(nn.Module):
     """
     Stack multiple GRU cells. For DecoderRNN.
@@ -56,26 +57,28 @@ class DecoderRNN(nn.Module):
     """
     A decoder RNN which applies Luong attention (https://arxiv.org/abs/1508.04025).
     """
-    def __init__(self, n_outputs, hidden_size, drop_p):
+    def __init__(self, n_outputs, ftrsC, hidden_size, drop_p):
         """
         Args:
             n_outputs (integer): Softmax classes.
+            ftrsC (integer): Channels of EncoderCNN's output feature map.
             hidden_size (integer): Size of GRU cells.
             drop_p (float): Probability to drop elements at Dropout layers.
         """
         super(DecoderRNN, self).__init__()
 
         self.hidden_size = hidden_size
+        self.ftrsC = ftrsC
         self.embed = nn.Embedding(n_outputs, hidden_size)
         self.cell = MultiLayerGRUCell(2 * hidden_size,
                                       hidden_size,
                                       num_layers=2,
                                       drop_p=drop_p)
         self.init_state = torch.nn.Parameter(torch.randn([2, 1, hidden_size]))
-        self.attn_W = nn.Linear(512, hidden_size)
+        self.attn_W = nn.Linear(ftrsC, hidden_size)
         self.attn_U = nn.Linear(hidden_size, hidden_size)
         self.attn_v = nn.Linear(hidden_size, 1)
-        self.fc = nn.Linear(512 + hidden_size, hidden_size)
+        self.fc = nn.Linear(ftrsC + hidden_size, hidden_size)
         self.drop = nn.Dropout(drop_p)
         self.classifier = nn.Linear(hidden_size, n_outputs)
 
@@ -84,7 +87,7 @@ class DecoderRNN(nn.Module):
         The forwarding behavior depends on the argument 'test'.
 
         Args:
-            encoder_ftrs (torch.FloatTensor, [batch_size, 512, ftrH, ftrW]): EncoderCNN's output feature map.
+            encoder_ftrs (torch.FloatTensor, [batch_size, ftrsC, ftrsH, ftrsW]): EncoderCNN's output feature map.
             sequences (torch.LongTensor, [batch_size, padded_len_tgt]): Padded target sequences. Only required when the
                                                                         argument 'test' is Fasle.
             test (bool): Determine the forwarding behavior. When test=False, it receives parallel pairs as training
@@ -99,7 +102,7 @@ class DecoderRNN(nn.Module):
             all_attn_weights (list(torch.FloatTensor)): A list contains attention alignment weights for the predictions.
         """
         batch_size = encoder_ftrs.shape[0]
-        states = encoder_ftrs.view(batch_size, 512, -1).transpose(1,2)   # [batch_size, ftrH * ftrW, 512]
+        states = encoder_ftrs.view(batch_size, self.ftrsC, -1).transpose(1,2)   # [batch_size, ftrsH * ftrsW, ftrsC]
         
         initial_state = self.init_state.repeat([1, batch_size, 1])   # [2, batch_size, hidden_size]
 
@@ -114,8 +117,8 @@ class DecoderRNN(nn.Module):
                     x = torch.tensor(predictions[-1]).cuda()
                     x = self.embed(x).unsqueeze(0)                     # [1, hidden_size]
                     h = self.cell(torch.cat([y, x], dim=-1), h)        # [2, 1, hidden_size]
-                attns, attn_weights = self.apply_attn(states, h[-1])   # [1, 512], [1, ftrH * ftrW]
-                y = torch.cat([attns, h[-1]], dim=-1)                  # [1, 512 + hidden_size]
+                attns, attn_weights = self.apply_attn(states, h[-1])   # [1, ftrsC], [1, ftrsH * ftrsW]
+                y = torch.cat([attns, h[-1]], dim=-1)                  # [1, ftrsC + hidden_size]
                 y = F.relu(self.fc(y))                                 # [1, hidden_size]
 
                 if time_step > -1:
@@ -141,8 +144,8 @@ class DecoderRNN(nn.Module):
                     h = initial_state                                           # [2, batch_size, hidden_size]
                 else:
                     h = self.cell(torch.cat([y, xs[:,time_step]], dim=-1), h)   # [2, batch_size, hidden_size]
-                attns, _ = self.apply_attn(states, h[-1])                       # [batch_size, 512]
-                y = torch.cat([attns, h[-1]], dim=-1)                           # [batch_size, 512 + hidden_size]
+                attns, _ = self.apply_attn(states, h[-1])                       # [batch_size, ftrsC]
+                y = torch.cat([attns, h[-1]], dim=-1)                           # [batch_size, ftrsC + hidden_size]
                 y = F.relu(self.fc(y))                                          # [batch_size, hidden_size]
                 outputs.append(y)
 
@@ -161,20 +164,19 @@ class DecoderRNN(nn.Module):
         Apply attention.
 
         Args:
-            source_states (torch.FloatTensor, [batch_size, 49, 512]):
-                The padded encoder output states.
+            source_states (torch.FloatTensor, [batch_size, ftrsH * ftrsW, ftrsC]): The padded encoder output states.
             target_state (torch.FloatTensor, [batch_size, hidden_size]): The decoder output state (of previous time step).
 
         Returns:
-            attns (torch.FloatTensor, [batch_size, 512]): The attention result (weighted sum of Encoder output states).
-            attn_weights (torch.FloatTensor, [batch_size, 49]): The attention alignment weights.
+            attns (torch.FloatTensor, [batch_size, ftrsC]): The attention result (weighted sum of Encoder output states).
+            attn_weights (torch.FloatTensor, [batch_size, ftrsH * ftrsW]): The attention alignment weights.
         """
         # A two-layer network used for project every pair of [source_state, target_state].
-        attns = self.attn_W(source_states) + self.attn_U(target_states).unsqueeze(1)   # [batch_size, 49, hidden_size]
-        attns = self.attn_v(F.relu(attns)).squeeze(2)                   # [batch_size, 49]
-        attns = F.softmax(attns, dim=-1)                                # [batch_size, 49]
+        attns = self.attn_W(source_states) + self.attn_U(target_states).unsqueeze(1)   # [batch_size, ftrsH * ftrsW, hidden_size]
+        attns = self.attn_v(F.relu(attns)).squeeze(2)                   # [batch_size, ftrsH * ftrsW]
+        attns = F.softmax(attns, dim=-1)                                # [batch_size, ftrsH * ftrsW]
         attn_weights = attns.clone()
-        attns = torch.sum(source_states * attns.unsqueeze(-1), dim=1)   # [batch_size, 512]
+        attns = torch.sum(source_states * attns.unsqueeze(-1), dim=1)   # [batch_size, ftrsC]
         return attns, attn_weights
 
 
@@ -192,7 +194,7 @@ class AttentionRNN(nn.Module):
         super(AttentionRNN, self).__init__()
 
         self.encoder = cnn.net(batch_norm=True)
-        self.decoder = DecoderRNN(n_outputs, hidden_size, drop_p)
+        self.decoder = DecoderRNN(n_outputs, self.encoder.ftrsC, hidden_size, drop_p)
 
     def forward(self, xs, ys=None, test=False):
         """
@@ -224,9 +226,9 @@ def test():
     os.environ["CUDA_VISIBLE_DEVICES"] = '0'
     
     import data
-    loader, tokenizer = data.load(batch_size=64, augmentation=True, split='train', shuffle=True)
+    loader, tokenizer = data.load(batch_size=64, augmentation=True, split='test')
     xs, ys = next(iter(loader))
-    model = Seq2Seq(len(tokenizer.vocab), hidden_size=256).cuda()
+    model = AttentionRNN(len(tokenizer.vocab), hidden_size=256).cuda()
     loss = model(xs.cuda(), ys.cuda())
 
 

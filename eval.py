@@ -1,4 +1,4 @@
-""" Compute the loss and phoneme error rate (PER).
+""" Compute the loss and accuracy.
 """
 import torch
 import os
@@ -7,7 +7,7 @@ import os
 """
 Configurations:
     SPLIT: Specify which subset of the data to evaluate.
-    N_HIDDEN: Size of GRU cell in both the EncoderRNN and DecoderRNN.
+    N_HIDDEN: Size of GRU cells.
     GPU_ID: Determine the GPU ID. Currently only support single GPU.
     CKPT_FILE: The checkpoint to restore.
 """
@@ -26,9 +26,8 @@ def main():
     # Create dataset
     loader, tokenizer = data.load(split=SPLIT, batch_size=1, augmentation=False)
 
-
     # Build model
-    model = build_model.Seq2Seq(len(tokenizer.vocab), N_HIDDEN)
+    model = build_model.AttentionRNN(len(tokenizer.vocab), N_HIDDEN)
     model.load_state_dict(torch.load(CKPT_FILE))
     model.eval()
     model = model.cuda()

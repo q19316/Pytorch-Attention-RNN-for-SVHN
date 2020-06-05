@@ -5,8 +5,9 @@ import torch.nn as nn
 
 
 class VGG(nn.Module):
-    def __init__(self, features, init_weights=True):
+    def __init__(self, ftrsC, features, init_weights=True):
         super(VGG, self).__init__()
+        self.ftrsC = ftrsC
         self.features = features
         if init_weights:
             self._initialize_weights()
@@ -47,5 +48,5 @@ def make_layers(cfg, batch_norm=False):
 
 DEFAULT = [64, 64, 'M', 128, 128, 'M', 256, 256, 'M', 512, 512]
 def net(batch_norm, cfg=DEFAULT, **kwargs):
-    model = VGG(make_layers(cfg , batch_norm=batch_norm), **kwargs)
+    model = VGG(cfg[-1], make_layers(cfg , batch_norm=batch_norm), **kwargs)
     return model
