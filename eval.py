@@ -6,7 +6,7 @@ import os
 
 """
 Configurations:
-    SPLIT: Specify which subset of the data to evaluate.
+    SPLIT: Specify which subset of the data to load.
     N_HIDDEN: Size of GRU cells.
     GPU_ID: Determine the GPU ID. Currently only support single GPU.
     CKPT_FILE: The checkpoint to restore.

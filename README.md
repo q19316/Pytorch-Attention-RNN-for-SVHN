@@ -10,7 +10,7 @@ The default recipe can achieve **~96.2%** test accuracy, which is slightly bette
 
 You can also generalize this method to other OCR tasks such as license plate recognition or text transcription.
 
-Here are some transcripts generated on _test_ images:
+Here are some attention and transcripts generated on _test_ images:
 
 ![](./img/Figure_1.png)
 
@@ -45,7 +45,7 @@ We would use `train` set and `extra` set for training and evaluate the final per
 ### Convert digitStruct.mat to JSON
 After extracting downloaded *.tar.gz files, you can find `digitStruct.mat` in each folder.
 The digitStruct.mat stores all of the annotation infomation of the images.
-However accessing *.mat files can be slow and inefficient, so we would like convert the digitStruct.mat files to individual json files.
+However accessing *.mat files can be slow and inefficient, so we would like convert the digitStruct.mat to JSON.
 
 Modify the parameter `ROOT` in `prepare_data.py` to where contains the data (`train/`, `extra/`, `test/`), and run:
 
@@ -62,8 +62,24 @@ python data.py
 ```
 ![](./img/aug.png)
 
+### Training
+To train with default recipe, simply run:
+```bash
+python train.py
+```
+The related parameters are at the beginning of `train.py`. You can easily check and modify them.
 
+### Test
+To calculate the accuracy on test set:
+```bash
+python eval.py
+```
 
+Note we follow the metric in [Goodfellow et al.](http://arxiv.org/pdf/1312.6082.pdf) .
+That is, a predicted sequence is correct only when it absolutely matches the ground-truth, digit-by-digit.
 
-
-
+If you just want to visualize the attention:
+```bash
+python play.py
+```
+![](./img/Figure_2.png)
