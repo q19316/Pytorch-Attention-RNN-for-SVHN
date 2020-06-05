@@ -5,7 +5,7 @@ The entire system has two compoents: A **CNN encoder** that extracts visual feat
 The idea is inspired by [Xu _et al._](https://arxiv.org/pdf/1502.03044.pdf), who proposed a model to **automatically learns where to look** when generating corresponding text for an image.
 Similar to [Goodfellow _et al._](http://arxiv.org/pdf/1312.6082.pdf), our model runs directly on the entire sequence without resorting to character segmentation.
 
-The default recipe can achieve **~96.2%** test accuracy, which is slightly better than [Goodfellow et al.](http://arxiv.org/pdf/1312.6082.pdf) (96.03%).
+The default recipe can achieve **~96.2%** test accuracy, which is slightly better than [Goodfellow _et al._](http://arxiv.org/pdf/1312.6082.pdf) (96.03%).
 
 You can also generalize this method to other OCR tasks such as license plate recognition or text transcription.
 
@@ -72,7 +72,7 @@ To calculate the accuracy on test set:
 ```bash
 python eval.py
 ```
-Note we follow the metric in [Goodfellow et al.](http://arxiv.org/pdf/1312.6082.pdf) .
+Note we follow the metric in [Goodfellow _et al._](http://arxiv.org/pdf/1312.6082.pdf) .
 That is, a predicted sequence is correct only when it absolutely matches the ground-truth, digit-by-digit.
 
 If you just want to visualize the attention:
