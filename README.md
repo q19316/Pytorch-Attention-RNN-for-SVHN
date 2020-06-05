@@ -1,5 +1,4 @@
 # Pytorch-Attention-RNN-for-SVHN
-
 This code implements attention-based RNN with Pytorch to recognize SVHN multi-digit numbers.
 
 The entire system has two compoents: A **CNN encoder** that extracts visual features from the input images, and a **attention-based RNN decoder** that emits digit sequence as outputs.
@@ -27,7 +26,6 @@ The RNN deocder is a two-layer GRU. It converts the CNN encoder's output feature
 It is defined in `build_model.py`.
 
 ## Requirements
-
 * Python 3.6
 * Pytorch 1.4
 * torchvision 0.6.0
@@ -55,7 +53,7 @@ python prepare_data.py
 
 ### Inspect data
 Data aumentation is crucial to combact overfitting.
-Specifically, we apply radnom cropping and color jittering to the images
+Specifically, we apply random cropping and color jittering to the images
 Running `data.py` can visualize exactly the differences:
 ```bash
 python data.py
@@ -74,7 +72,6 @@ To calculate the accuracy on test set:
 ```bash
 python eval.py
 ```
-
 Note we follow the metric in [Goodfellow et al.](http://arxiv.org/pdf/1312.6082.pdf) .
 That is, a predicted sequence is correct only when it absolutely matches the ground-truth, digit-by-digit.
 
@@ -83,3 +80,12 @@ If you just want to visualize the attention:
 python play.py
 ```
 ![](./img/Figure_2.png)
+
+## Reference
+I.Goodfellow _et al._, "Multi-digit Number Recognition from Street View Imagery using Deep Convolutional Neural Networks",
+http://arxiv.org/pdf/1312.6082.pdf
+
+K.Xu _et al._, "Show, Attend and Tell: Neural Image Caption Generation with Visual Attention",
+https://arxiv.org/pdf/1502.03044.pdf
+
+
