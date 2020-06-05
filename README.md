@@ -1,6 +1,6 @@
-# Attention-RNN-for-SVHN
+# Pytorch-Attention-RNN-for-SVHN
 
-This code implements attention-based RNN to recognize multi-digit numbers from SVHN dataset.
+This code implements attention-based RNN with Pytorch to recognize SVHN multi-digit numbers.
 
 The entire system has two compoents: A **CNN encoder** that extracts visual features from the input images, and a **attention-based RNN decoder** that emits digit sequence as outputs.
 The idea is inspired by [Xu _et al._](https://arxiv.org/pdf/1502.03044.pdf), who proposed a model to **automatically learns where to look** when generating corresponding text for an image.
@@ -22,8 +22,8 @@ Note that the total down-sampling rate must highly depend on your input image si
 By default the input size is **54x54**, and there are three MaxPooling of stride 2 throughout the CNN, so the input will be down-sampled by **8x**.
 For smaller image size, you should use less down-sampling.
 
-### RNN encoder
-The RNN deocder is a two-layer GRU, which converts the CNN encoder's output feature map into a sequence of labels using attention mechanism.
+### RNN decoder
+The RNN deocder is a two-layer GRU. It converts the CNN encoder's output feature map into a sequence of labels using attention mechanism.
 It is defined in `build_model.py`.
 
 ## Requirements
@@ -44,7 +44,7 @@ We would use `train` set and `extra` set for training and evaluate the final per
 
 ### Convert digitStruct.mat to JSON
 After extracting downloaded *.tar.gz files, you can find `digitStruct.mat` in each folder.
-The digitStruct.mat stores all of the annotation infomations of the images.
+The digitStruct.mat stores all of the annotation infomation of the images.
 However accessing *.mat files can be slow and inefficient, so we would like convert the digitStruct.mat files to individual json files.
 
 Modify the parameter `ROOT` in `prepare_data.py` to where contains the data (`train/`, `extra/`, `test/`), and run:
@@ -53,7 +53,17 @@ Modify the parameter `ROOT` in `prepare_data.py` to where contains the data (`tr
 python prepare_data.py
 ```
 
-## Inspect data
+### Inspect data
+Data aumentation is crucial to combact overfitting.
+Specifically, we apply radnom cropping and color jittering to the images
+Running `data.py` can visualize exactly the differences:
+```bash
+python data.py
+```
+![](./img/aug.png)
+
+
+
 
 
 
