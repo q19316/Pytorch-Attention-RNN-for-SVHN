@@ -23,9 +23,9 @@ CKPT_FILE = "logs/checkpoint-015.pth"
 
 
 def showAttention(image, attentions, predictions, ground_truth):
-    plt.figure()
-    plt.subplot(2, len(attentions), 1)
-    plt.title("Ground-truth: %s"%ground_truth)
+    plt.figure(figsize=(5,3))
+    plt.subplot(1, len(attentions)+1, 1)
+    plt.title("Ground-truth:\n[%s]"%ground_truth, fontsize=10)
     plt.imshow(image)
     plt.axis('off')
     for i, attn in enumerate(attentions):
@@ -33,8 +33,8 @@ def showAttention(image, attentions, predictions, ground_truth):
         attn = cv2.resize(attn, (image.shape[1], image.shape[0]))
         attn = np.expand_dims(attn, axis=-1)
         attn = attn * (1.0 / np.max(attn))    # Scaling to (0, 1.0) for better visualization
-        plt.subplot(2, len(attentions), len(attentions)+i+1)
-        plt.title("Predict: %s" % predictions.split()[i])
+        plt.subplot(1, len(attentions)+1, i+2)
+        plt.title("Predict: %s" % predictions.split()[i], fontsize=10)
         plt.imshow((image/255.0) * attn)
         plt.axis('off')
     plt.show()
