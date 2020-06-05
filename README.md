@@ -12,9 +12,7 @@ You can also generalize this method to other OCR tasks such as license plate rec
 
 Here are some transcripts generated on _test_ images:
 
----
 ![](./img/Figure_1.png)
----
 
 ## Network Architecture
 ### CNN encoder
