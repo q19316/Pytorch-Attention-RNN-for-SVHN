@@ -71,7 +71,7 @@ To calculate the accuracy on test set:
 ```bash
 python eval.py
 ```
-The default recipe can achieve ~96.2% test accuracy, which is slightly better than Goodfellow et al. (96.03%).
+The default recipe can achieve **~96.2%** test accuracy, which is slightly better than [Goodfellow _et al._](http://arxiv.org/pdf/1312.6082.pdf) (96.03%).
 
 Note we follow the metric in [Goodfellow _et al._](http://arxiv.org/pdf/1312.6082.pdf) .
 That is, a predicted sequence is correct only when it absolutely matches the ground-truth, digit-by-digit.
