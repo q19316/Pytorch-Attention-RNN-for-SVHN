@@ -1,8 +1,8 @@
 # Pytorch-Attention-RNN-for-SVHN
 This code implements attention-based RNN with Pytorch to recognize SVHN multi-digit numbers.
+The idea is inspired by Xu _et al._<sup>[1](#References)</sup>, who proposed a model to **automatically learns where to look** when generating corresponding text for an image.
 
 The entire system has two compoents: A **CNN encoder** that extracts visual features from the input images, and a **attention-based RNN decoder** that emits digit sequence as outputs.
-The idea is inspired by Xu _et al._<sup>[1](#References)</sup>, who proposed a model to **automatically learns where to look** when generating corresponding text for an image.
 Similar to Goodfellow _et al._<sup>[2](#References)</sup>, our model runs directly on the entire sequence without resorting to character segmentation.
 
 The default recipe can achieve **~96.2%** test accuracy, which is slightly better than Goodfellow _et al._<sup>[2](#References)</sup> (96.03%).
