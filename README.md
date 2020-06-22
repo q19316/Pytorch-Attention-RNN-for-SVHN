@@ -2,8 +2,8 @@
 This code implements attention-based RNN with Pytorch to recognize SVHN multi-digit numbers.
 
 The entire system has two compoents: A **CNN encoder** that extracts visual features from the input images, and a **attention-based RNN decoder** that emits digit sequence as outputs.
-The idea is inspired by [Xu _et al._](https://arxiv.org/pdf/1502.03044.pdf), who proposed a model to **automatically learns where to look** when generating corresponding text for an image.
-Similar to [Goodfellow _et al._](http://arxiv.org/pdf/1312.6082.pdf), our model runs directly on the entire sequence without resorting to character segmentation.
+The idea is inspired by Xu _et al._<sup>[1](#References)</sup>, who proposed a model to **automatically learns where to look** when generating corresponding text for an image.
+Similar to Goodfellow _et al._<sup>[2](#References)</sup>, our model runs directly on the entire sequence without resorting to character segmentation.
 
 The default recipe can achieve **~96.2%** test accuracy, which is slightly better than Goodfellow _et al._<sup>[2](#References)</sup> (96.03%).
 
@@ -71,9 +71,9 @@ To calculate the accuracy on test set:
 ```bash
 python eval.py
 ```
-The default recipe can achieve **~96.2%** test accuracy, which is slightly better than [Goodfellow _et al._](http://arxiv.org/pdf/1312.6082.pdf) (96.03%).
+The default recipe can achieve **~96.2%** test accuracy, which is slightly better than Goodfellow _et al._<sup>[2](#References)</sup> (96.03%).
 
-Note we follow the metric in [Goodfellow _et al._](http://arxiv.org/pdf/1312.6082.pdf) .
+Note we follow the metric in Goodfellow _et al._<sup>[2](#References)</sup>.
 That is, a predicted sequence is correct only when it absolutely matches the ground-truth, digit-by-digit.
 
 If you just want to visualize the attention:
@@ -83,10 +83,10 @@ python play.py
 ![](./img/Figure_2.png)
 
 ## References
-[1] Goodfellow _et al._, "Multi-digit Number Recognition from Street View Imagery using Deep Convolutional Neural Networks",
-http://arxiv.org/pdf/1312.6082.pdf
-
-[2] Xu _et al._, "Show, Attend and Tell: Neural Image Caption Generation with Visual Attention",
+[1] Xu _et al._, "Show, Attend and Tell: Neural Image Caption Generation with Visual Attention",
 https://arxiv.org/pdf/1502.03044.pdf
+
+[2] Goodfellow _et al._, "Multi-digit Number Recognition from Street View Imagery using Deep Convolutional Neural Networks",
+http://arxiv.org/pdf/1312.6082.pdf
 
 
